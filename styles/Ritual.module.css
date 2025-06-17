@@ -1,0 +1,98 @@
+.container {
+    min-height: 100vh;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-family: var(--font-sans);
+    overflow: hidden;
+    position: relative;
+    background-image: url('/screens/download.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  
+  .main {
+    padding: 2rem 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .content {
+    background: transparent;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 100%;
+  }
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+  
+  .subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  .downloadButton {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ff4500;
+    background-color: #ff4500;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .downloadButton:hover {
+    filter: brightness(1.2);
+  }
+
+  .floatingContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+  
+  .floatingText {
+    position: absolute;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.3);
+    animation: float 20s infinite linear;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: calc(-0.5s * var(--i));
+    text-shadow: 0 0 5px rgba(255,255,255,0.3);
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg) translateX(200px) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg) translateX(200px) rotate(-360deg);
+    }
+  } 
