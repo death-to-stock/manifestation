@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import styles from '../styles/Fate.module.css';
@@ -8,14 +9,33 @@ export default function Fate() {
   const { selected } = router.query;
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push({
-        pathname: '/ritual',
-        query: { selected: selected },
-      });
-    }, 3000); // 3-second delay to simulate creation
+    if (selected) {
+      const selectedItems = Array.isArray(selected) ? selected : [selected];
+      
+      const generateVideo = async () => {
+        const response = await fetch('/api/generate-video', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ selected: selectedItems }),
+        });
+        
+        if (response.ok) {
+          const { videoId } = await response.json();
+          router.push({
+            pathname: '/ritual',
+            query: { videoId: videoId, selected: selectedItems },
+          });
+        } else {
+          console.error('Failed to generate video');
+          // Handle error, maybe redirect to an error page or back to the start
+          router.push('/');
+        }
+      };
 
-    return () => clearTimeout(timer);
+      generateVideo();
+    }
   }, [router, selected]);
 
   return (
@@ -28,18 +48,10 @@ export default function Fate() {
       <main className={styles.main}>
         <h1 className={styles.title}>YOUR FATE IS BEING CREATED!</h1>
         <p className={styles.subtitle}>PLEASE HOLD...</p>
-        <div className={styles.logo}>(DTS)</div>
+        <div className={styles.logo}>
+          <Image src="/DTSloading.gif" alt="Loading..." width={150} height={150} />
+        </div>
       </main>
-
-      <footer className={styles.footer}>
-          <a
-            href="https://deathtostock.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            deathtostock.com
-          </a>
-        </footer>
     </div>
   );
 } 

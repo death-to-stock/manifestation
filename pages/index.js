@@ -13,8 +13,8 @@ export default function Home() {
 
       <main className={styles.main}>
         <div className={styles.header}>
-          <p><b>(DTS)</b></p>
-          <p>x</p>
+          <p>(<b>DTS</b>)</p>
+          <p>X</p>
           <p>TINA TARIGHIAN</p>
         </div>
 
@@ -32,17 +32,17 @@ export default function Home() {
             </Link>
           </div>
         </div>
-
-        <footer className={styles.footer}>
-          <a
-            href="https://deathtostock.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            deathtostock.com
-          </a>
-        </footer>
       </main>
+
+      <footer className={styles.footer}>
+        <a
+          href="https://deathtostock.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          deathtostock.com
+        </a>
+      </footer>
     </div>
   );
 }

@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import * as Tone from 'tone';
 import styles from '../styles/Ritual.module.css';
 import { formatDisplayName } from '../utils/format';
 
@@ -17,55 +16,23 @@ const aúdioManifestations = {
 
 export default function Ritual() {
   const router = useRouter();
-  const { selected } = router.query;
+  const { videoId, selected } = router.query;
   const [selections, setSelections] = useState([]);
 
   useEffect(() => {
-    // Ensure Tone.js is started on user interaction
-    const startAudio = async () => {
-      await Tone.start();
-      console.log('Audio context started');
-    };
-    document.body.addEventListener('click', startAudio, { once: true });
-
     if (selected) {
         const selectedItems = Array.isArray(selected) ? selected : [selected];
         setSelections(selectedItems);
     }
-
-    return () => {
-        document.body.removeEventListener('click', startAudio);
-    }
   }, [selected]);
 
-  useEffect(() => {
-    if (selections.length > 0) {
-      const players = selections.map(item => {
-        const audioPath = `/audio/${item}`;
-        if (audioPath) {
-            return new Tone.Player(audioPath).toDestination();
-        }
-        return null;
-      }).filter(Boolean);
-
-      Tone.loaded().then(() => {
-        players.forEach(player => player.start());
-      });
-
-      return () => {
-        players.forEach(player => {
-            if (player) {
-                player.stop();
-                player.dispose();
-            }
-        });
-      };
-    }
-  }, [selections]);
-
   const handleDownload = () => {
-    console.log('Downloading ritual...');
-    alert('Downloading ritual MP4...');
+    if(videoId) {
+      window.location.href = `/api/download-video?videoId=${videoId}`;
+      setTimeout(() => {
+        router.push('/share');
+      }, 1000);
+    }
   };
 
   return (

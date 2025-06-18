@@ -5,6 +5,7 @@
   --foreground: #ffffff;
   --font-sans: 'Work Sans', sans-serif;
   --font-serif: 'Adieu', serif; /* Adieu is a placeholder, will fallback to serif */
+  --font-heading: 'Michroma', sans-serif;
 }
 
 @theme inline {
@@ -32,4 +33,8 @@ body {
 
 .font-sans {
     font-family: var(--font-sans);
+}
+
+.font-heading {
+    font-family: var(--font-heading);
 }

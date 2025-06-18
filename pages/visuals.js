@@ -3,11 +3,25 @@ import Link from 'next/link';
 import styles from '../styles/Visuals.module.css';
 
 export default function Visuals() {
-  const handleDownload = () => {
-    // For now, we'll just log a message.
-    // Later, this will trigger a download of visual assets.
-    console.log('Downloading visuals...');
-    alert('Downloading visuals...');
+  const handleDownload = async () => {
+    try {
+      const response = await fetch('/api/download-free-assets');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'free-visuals.zip';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download failed:', error);
+      alert('Download failed. Please try again.');
+    }
   };
 
   return (
@@ -41,6 +55,9 @@ export default function Visuals() {
             deathtostock.com
           </a>
         </footer>
+        <div className={styles.blurb}>
+          <p>🔍 Psst! Find them in your Files (downloads folder)</p>
+        </div>
     </div>
   );
 } 
