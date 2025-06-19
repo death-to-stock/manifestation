@@ -1,10 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import ffmpeg from 'fluent-ffmpeg';
-import ffmpegInstaller from '@ffmpeg-installer/ffmpeg';
+import ffmpegStatic from 'ffmpeg-static';
+import ffprobeStatic from 'ffprobe-static';
 import { randomUUID } from 'crypto';
 
-ffmpeg.setFfmpegPath(ffmpegInstaller.path);
+ffmpeg.setFfmpegPath(ffmpegStatic);
+ffmpeg.setFfprobePath(typeof ffprobeStatic === 'string' ? ffprobeStatic : ffprobeStatic.path);
 
 const audioDir = path.join(process.cwd(), 'public', 'audio');
 const imageDir = path.join(process.cwd(), 'public', 'random');
