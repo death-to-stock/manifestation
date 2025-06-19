@@ -65,6 +65,7 @@ export default function Fate() {
   const [selections, setSelections] = useState([]);
   const [isReady, setIsReady] = useState(false);
   const [videoUrl, setVideoUrl] = useState(null);
+  const [fileExtension, setFileExtension] = useState('');
 
   useEffect(() => {
     if (selected) {
@@ -128,8 +129,28 @@ export default function Fate() {
             console.log('🎥 Video and 🎤 Audio tracks obtained');
     
             const combinedStream = new MediaStream([videoTrack, audioTrack]);
-            const recorder = new MediaRecorder(combinedStream, { mimeType: 'video/webm' });
-            console.log('📼 MediaRecorder initialized');
+
+            const getSupportedMimeType = () => {
+                const types = [
+                    { mimeType: 'video/mp4;codecs="avc1, mp4a.40.2"', extension: 'mp4' },
+                    { mimeType: 'video/mp4', extension: 'mp4' },
+                    { mimeType: 'video/webm;codecs=vp9,opus', extension: 'webm' },
+                    { mimeType: 'video/webm;codecs=vp8,opus', extension: 'webm' },
+                    { mimeType: 'video/webm', extension: 'webm' }
+                ];
+                for (const type of types) {
+                    if (typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(type.mimeType)) {
+                        return type;
+                    }
+                }
+                return { mimeType: 'video/webm', extension: 'webm' }; // Fallback
+            };
+
+            const { mimeType, extension } = getSupportedMimeType();
+            setFileExtension(extension);
+
+            const recorder = new MediaRecorder(combinedStream, { mimeType });
+            console.log(`📼 MediaRecorder initialized with ${mimeType}`);
             const chunks = [];
     
             recorder.ondataavailable = (event) => {
@@ -141,8 +162,8 @@ export default function Fate() {
     
             recorder.onstop = () => {
               console.log('🛑 Recording stopped');
-              const videoBlob = new Blob(chunks, { type: 'video/webm' });
-              console.log(`💾 Video blob created: ${videoBlob.size} bytes`);
+              const videoBlob = new Blob(chunks, { type: mimeType });
+              console.log(`💾 Video blob created: ${videoBlob.size} bytes, type: ${mimeType}`);
               const url = URL.createObjectURL(videoBlob);
               console.log(`🔗 Created object URL: ${url}`);
               setVideoUrl(url);
@@ -171,7 +192,7 @@ export default function Fate() {
     if(videoUrl) {
       const a = document.createElement('a');
       a.href = videoUrl;
-      a.download = 'dtsxtina.webm';
+      a.download = `dtsxtina.${fileExtension}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
