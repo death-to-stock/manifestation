@@ -4,12 +4,15 @@
     flex-direction: column;
     color: #fff;
     font-family: var(--font-sans);
-    background-image: url('/screens/menu.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
   }
+
+.backgroundImageWrapper {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  z-index: -1;
+}
   
 .main {
     flex: 1;

@@ -6,6 +6,7 @@ import styles from '../styles/Manifest.module.css';
 import { formatDisplayName } from '../utils/format';
 import fs from 'fs';
 import path from 'path';
+import Image from 'next/image';
 
 export async function getStaticProps() {
   const audioDir = path.join(process.cwd(), 'public', 'audio');
@@ -42,6 +43,14 @@ export default function Manifest({ manifestations }) {
 
   return (
     <div className={styles.container}>
+      <div className={styles.backgroundImageWrapper}>
+        <Image
+          src="/screens/menu.jpg"
+          alt="background"
+          layout="fill"
+          objectFit="cover"
+        />
+      </div>
       <Head>
         <title>Manifest - DTS x TINA</title>
         <link rel="icon" href="/favicon.ico" />
