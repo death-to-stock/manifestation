@@ -22,10 +22,12 @@ export default function Fate() {
         });
         
         if (response.ok) {
-          const { videoId } = await response.json();
+          const videoBlob = await response.blob();
+          const videoUrl = URL.createObjectURL(videoBlob);
+          sessionStorage.setItem('generatedVideoUrl', videoUrl);
           router.push({
             pathname: '/ritual',
-            query: { videoId: videoId, selected: selectedItems },
+            query: { selected: selectedItems },
           });
         } else {
           console.error('Failed to generate video');

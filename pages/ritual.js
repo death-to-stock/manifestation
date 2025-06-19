@@ -16,10 +16,15 @@ const aúdioManifestations = {
 
 export default function Ritual() {
   const router = useRouter();
-  const { videoId, selected } = router.query;
+  const { selected } = router.query;
   const [selections, setSelections] = useState([]);
+  const [videoUrl, setVideoUrl] = useState(null);
 
   useEffect(() => {
+    const url = sessionStorage.getItem('generatedVideoUrl');
+    if (url) {
+        setVideoUrl(url);
+    }
     if (selected) {
         const selectedItems = Array.isArray(selected) ? selected : [selected];
         setSelections(selectedItems);
@@ -27,8 +32,14 @@ export default function Ritual() {
   }, [selected]);
 
   const handleDownload = () => {
-    if(videoId) {
-      window.location.href = `/api/download-video?videoId=${videoId}`;
+    if(videoUrl) {
+      const a = document.createElement('a');
+      a.href = videoUrl;
+      a.download = 'dtsxtina.mp4';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
       setTimeout(() => {
         router.push('/share');
       }, 1000);

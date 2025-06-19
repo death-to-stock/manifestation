@@ -10,11 +10,6 @@ ffmpeg.setFfprobePath(typeof ffprobeStatic === 'string' ? ffprobeStatic : ffprob
 
 const audioDir = path.join(process.cwd(), 'public', 'audio');
 const imageDir = path.join(process.cwd(), 'public', 'random');
-const outputDir = path.join(process.cwd(), 'public', 'output');
-
-if (!fs.existsSync(outputDir)) {
-  fs.mkdirSync(outputDir, { recursive: true });
-}
 
 export default function handler(req, res) {
   // Allow CORS pre-flight
@@ -37,9 +32,6 @@ export default function handler(req, res) {
   const imageFiles = fs.readdirSync(imageDir).filter(f => f.endsWith('.jpg'));
   const randomImage = imageFiles[Math.floor(Math.random() * imageFiles.length)];
   const imagePath = path.join(imageDir, randomImage);
-  
-  const outputId = randomUUID();
-  const outputPath = path.join(outputDir, `${outputId}.mp4`);
   
   const command = ffmpeg(imagePath)
     .inputOptions(['-loop 1'])
@@ -81,20 +73,22 @@ export default function handler(req, res) {
     command.outputOptions('-map', '[mixout]');
   }
   
+  res.setHeader('Content-Type', 'video/mp4');
+
   command
     .outputOptions([
         '-c:v libx264',
         '-c:a aac',
         '-strict experimental',
         '-pix_fmt yuv420p',
-        '-shortest'
+        '-f mp4',
+        '-movflags frag_keyframe+empty_moov'
     ])
-    .on('end', () => {
-      res.status(200).json({ videoId: outputId });
-    })
     .on('error', (err) => {
       console.error('ffmpeg error:', err);
-      res.status(500).json({ message: 'Error generating video' });
+      if (!res.headersSent) {
+        res.status(500).json({ message: 'Error generating video' });
+      }
     })
-    .save(outputPath);
+    .pipe(res, { end: true });
 } 
