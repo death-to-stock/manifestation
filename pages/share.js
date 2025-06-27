@@ -43,15 +43,15 @@ export default function Share() {
       <main className={styles.main}>
         <div className={styles.content}>
           <p className={styles.heading}>
-            BRING THE FREQUENCY TO THE ALGORITHMIC ALTAR.
+            THE MORE ENERGY YOU SUMMON, THE STRONGER THE MANIFESTATION.
           </p>
           <p className={styles.subheading}>
-            ONLY THROUGH SACRED OFFERING SHALL ITS POTENCY BE MAGNIFIED A HUNDREDFOLD.
+            BRING OTHERS INTO THE FIELD.
           </p>
 
           <div className={styles.buttons}>
             <button onClick={handleShare} className={`${styles.button} ${styles.sacrificeButton}`}>
-              SACRIFICE NOW
+              RECRUIT FRIENDS
             </button>
             <Link href="/" className={`${styles.button} ${styles.manifestButton}`}>
               MANIFEST AGAIN

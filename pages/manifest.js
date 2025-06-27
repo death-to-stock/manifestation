@@ -76,13 +76,13 @@ export default function Manifest({ manifestations }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <div className={styles.header}>
-            <Link href="/" className={styles.backButton}>
-                BACK
-            </Link>
-        </div>
+      <div className={styles.header}>
+          <Link href="/" className={styles.backButton}>
+              BACK
+          </Link>
+      </div>
 
+      <main className={styles.main}>
         <h1 className={styles.title}>
           YOU'VE ENTERED THE SUPERMANIFESTATION PORTAL
         </h1>

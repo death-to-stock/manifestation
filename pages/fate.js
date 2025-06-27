@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import fateStyles from '../styles/Fate.module.css';
@@ -260,6 +261,12 @@ export default function Fate() {
         <title>Your Ritual - DTS x TINA</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <div className={ritualStyles.header}>
+        <Link href="/manifest" className={ritualStyles.backButton}>
+            BACK
+        </Link>
+      </div>
 
       <main className={ritualStyles.main}>
         <div className={ritualStyles.floatingContainer}>
