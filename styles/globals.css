@@ -1,11 +1,29 @@
-@import "tailwindcss";
+@font-face {
+  font-family: 'Adieu';
+  src: url('/fonts/Adieu-Regular.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NHGDP';
+  src: url('/fonts/NHG.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #000000;
   --foreground: #ffffff;
-  --font-sans: 'Work Sans', sans-serif;
-  --font-serif: 'Adieu', serif; /* Adieu is a placeholder, will fallback to serif */
-  --font-heading: 'Michroma', sans-serif;
+  --font-sans: 'NHGDP', sans-serif;
+  --font-serif: 'Adieu', serif;
+  --font-heading: 'Adieu', sans-serif;
 }
 
 @theme inline {
@@ -21,10 +39,17 @@
   }
 }
 
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
+  padding: 0;
+  margin: 0;
+  font-family: "NHGDP", sans-serif;
+}
+
+body {
+  color: white;
+  background: black;
+  font-family: "NHGDP", sans-serif;
 }
 
 .font-serif {
@@ -37,4 +62,9 @@ body {
 
 .font-heading {
     font-family: var(--font-heading);
+    font-weight: 100;
+}
+
+a {
+  color: inherit;
 }
