@@ -67,6 +67,7 @@ export default function Fate() {
   const [videoUrl, setVideoUrl] = useState(null);
   const [fileExtension, setFileExtension] = useState('');
   const [progress, setProgress] = useState(0);
+  const [downloaded, setDownloaded] = useState(false);
 
   useEffect(() => {
     if (selected) {
@@ -226,10 +227,7 @@ export default function Fate() {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      
-      setTimeout(() => {
-        router.push('/share');
-      }, 1000);
+      setDownloaded(true);
     }
   };
 
@@ -275,9 +273,15 @@ export default function Fate() {
         <div className={ritualStyles.content}>
             <h1 className={ritualStyles.title}>YOUR CUSTOM MANIFESTATION FREQUENCY IS READY TO USE</h1>
             <p className={ritualStyles.subtitle}>Ritual: 1x listen per day</p>
-            <button className={ritualStyles.downloadButton} onClick={handleDownload}>
-                DOWNLOAD
-            </button>
+            {downloaded ? (
+              <button className={ritualStyles.downloadButton} onClick={() => router.push('/share')}>
+                  CONTINUE
+              </button>
+            ) : (
+              <button className={ritualStyles.downloadButton} onClick={handleDownload}>
+                  DOWNLOAD
+              </button>
+            )}
         </div>
       </main>
     </div>
