@@ -1,29 +1,9 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from '../styles/Visuals.module.css';
 
 export default function Visuals() {
-  const handleDownload = async () => {
-    try {
-      const response = await fetch('/api/download-free-assets');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'free-visuals.zip';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Download failed:', error);
-      alert('Download failed. Please try again.');
-    }
-  };
-
   return (
     <div className={styles.container}>
       <Head>
@@ -31,19 +11,23 @@ export default function Visuals() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <div className={styles.header}>
-            <Link href="/" className={styles.backButton}>
-                BACK
-            </Link>
-        </div>
+      <a href="https://deathtostock.com" target="_blank" rel="noopener noreferrer" className={styles.logo}>
+        <Image src="/DTSlogo.svg" alt="DTS Logo" width={51} height={16} />
+      </a>
 
+      <div className={styles.header}>
+          <Link href="/" className={styles.backButton}>
+              BACK
+          </Link>
+      </div>
+
+      <main className={styles.main}>
         <h1 className={styles.title}>STAY LOST</h1>
         <p className={styles.subtitle}>It's the only way to discover something new</p>
         
-        <button className={styles.downloadButton} onClick={handleDownload}>
+        <a href="https://deathtostock.s3.us-east-1.amazonaws.com/2025/ARE+YOU+STILL+LOST%3F+.zip" target="_blank" rel="noopener noreferrer" className={styles.downloadButton}>
           DOWNLOAD FREE VISUALS
-        </button>
+        </a>
       </main>
 
       <footer className={styles.footer}>
