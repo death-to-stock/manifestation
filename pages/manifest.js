@@ -8,14 +8,34 @@ import fs from 'fs';
 import path from 'path';
 import Image from 'next/image';
 
+function shuffle(array) {
+  let currentIndex = array.length,  randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex > 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
+
 export async function getStaticProps() {
   const audioDir = path.join(process.cwd(), 'public', 'audio');
   const filenames = fs.readdirSync(audioDir);
   const filteredFilenames = filenames.filter(file => file.endsWith('.m4a') || file.endsWith('.mp3'));
 
+  const shuffledFilenames = shuffle(filteredFilenames);
+
   return {
     props: {
-      manifestations: filteredFilenames,
+      manifestations: shuffledFilenames,
     },
   };
 }

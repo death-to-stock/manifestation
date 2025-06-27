@@ -34,16 +34,14 @@
   }
   
   .subtitle {
-    font-size: 1rem;
-    margin-bottom: 2rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-family: var(--font-heading);
+    margin: 0;
+    line-height: 1.15;
+    font-size: 1.5rem;
+    text-align: center;
   }
   
   .logo {
-    font-size: 1.2rem;
-    letter-spacing: 0.1em;
+    margin-top: 2rem;
   }
 
   .footer {
@@ -58,4 +56,27 @@
   .footer a {
     color: #fff;
     text-decoration: none;
+  }
+
+  .progressContainer {
+    width: 80%;
+    max-width: 400px;
+    background-color: #333;
+    border-radius: 5px;
+    margin-top: 1rem;
+    overflow: hidden;
+  }
+
+  .progressBar {
+    height: 20px;
+    background-color: #ff4500;
+    width: 0%;
+    transition: width 0.3s ease-in-out;
+    border-radius: 5px;
+  }
+
+  .progressText {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    color: #ff4500;
   } 

@@ -66,6 +66,7 @@ export default function Fate() {
   const [isReady, setIsReady] = useState(false);
   const [videoUrl, setVideoUrl] = useState(null);
   const [fileExtension, setFileExtension] = useState('');
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (selected) {
@@ -75,8 +76,13 @@ export default function Fate() {
         const generateVideo = async () => {
         try {
             console.log('🎬 Video generation started');
+            setProgress(5);
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             console.log('🎧 AudioContext created');
+
+            const totalFiles = selectedItems.length;
+            const audioDecodingProgress = 35;
+            let filesLoaded = 0;
 
             const audioSources = await Promise.all(
               selectedItems.map(async (audioFile) => {
@@ -84,6 +90,8 @@ export default function Fate() {
                 const response = await fetch(`/audio/${audioFile}`);
                 const arrayBuffer = await response.arrayBuffer();
                 const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                filesLoaded++;
+                setProgress(5 + Math.round((filesLoaded / totalFiles) * audioDecodingProgress));
                 const source = audioContext.createBufferSource();
                 source.buffer = audioBuffer;
                 source.loop = true;
@@ -98,6 +106,7 @@ export default function Fate() {
             audioSources.forEach(source => source.start());
             console.log('▶️ Audio sources started');
     
+            setProgress(45);
             const randomImage = imageFiles[Math.floor(Math.random() * imageFiles.length)];
             const imageUrl = `/random/${randomImage}`;
             console.log(`🖼️ Selected random image: ${imageUrl}`);
@@ -122,6 +131,7 @@ export default function Fate() {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(image, 0, 0);
             console.log('🎨 Image drawn to canvas');
+            setProgress(50);
     
             const videoStream = canvas.captureStream(30);
             const [videoTrack] = videoStream.getVideoTracks();
@@ -162,21 +172,41 @@ export default function Fate() {
     
             recorder.onstop = () => {
               console.log('🛑 Recording stopped');
+              setProgress(95);
               const videoBlob = new Blob(chunks, { type: mimeType });
               console.log(`💾 Video blob created: ${videoBlob.size} bytes, type: ${mimeType}`);
               const url = URL.createObjectURL(videoBlob);
               console.log(`🔗 Created object URL: ${url}`);
               setVideoUrl(url);
               setIsReady(true);
+              setProgress(100);
               console.log('✅ UI updated to ready state');
             };
     
             recorder.start();
             console.log('🔴 Recording started');
+            
+            const recordingDuration = 15000;
+            const recordingProgress = 40;
+            const progressInterval = 100;
+            const totalIntervals = recordingDuration / progressInterval;
+            let currentInterval = 0;
+
+            const progressTimer = setInterval(() => {
+                currentInterval++;
+                if (currentInterval <= totalIntervals) {
+                    const newProgress = 50 + Math.round((currentInterval / totalIntervals) * recordingProgress);
+                    setProgress(newProgress);
+                } else {
+                    clearInterval(progressTimer);
+                }
+            }, progressInterval);
+
             setTimeout(() => {
+              clearInterval(progressTimer);
               recorder.stop();
               audioContext.close();
-            }, 15000); // Record for 15 seconds
+            }, recordingDuration); // Record for 15 seconds
   
           } catch (error) {
             console.error('❌ Failed to generate video:', error);
@@ -217,6 +247,10 @@ export default function Fate() {
             <div className={fateStyles.logo}>
                 <Image src="/DTSloading.gif" alt="Loading..." width={150} height={150} />
             </div>
+            <div className={fateStyles.progressContainer}>
+                <div className={fateStyles.progressBar} style={{ width: `${progress}%` }}></div>
+            </div>
+            <p className={fateStyles.progressText}>{progress}%</p>
             </main>
         </div>
     );
