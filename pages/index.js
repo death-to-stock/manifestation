@@ -1,8 +1,36 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import styles from '../styles/Home.module.css';
+import { useAudio } from '../context/AudioContext';
 
 export default function Home() {
+  const { playAudio } = useAudio();
+  const [rotClickCount, setRotClickCount] = useState(0);
+  const router = useRouter();
+
+  const buttonTexts = [
+    "ROT IN THE UNKNOWN",
+    "REALLY?",
+    "TOO LATE TO TURN BACK",
+    "DON'T SAY I DIDN'T WARN YOU",
+    "ONE MORE CLICK..."
+  ];
+
+  const handleRotClick = (e) => {
+    e.preventDefault();
+    if (rotClickCount < 4) {
+      setRotClickCount(rotClickCount + 1);
+    } else {
+      router.push('/visuals');
+    }
+  };
+
+  const handleClick = () => {
+    playAudio();
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -23,13 +51,17 @@ export default function Home() {
             STOP! ARE YOU LOST?
           </h1>
 
-          <div className={styles.buttons}>
+          <div className={styles.buttons} onClick={handleClick}>
             <Link href="/manifest" className={`${styles.button} ${styles.controlButton}`}>
               TAKE CONTROL
             </Link>
-            <Link href="/visuals" className={`${styles.button} ${styles.rotButton}`}>
-              ROT IN THE UNKNOWN
-            </Link>
+            <div
+              className={`${styles.button} ${styles.rotButton}`}
+              onClick={handleRotClick}
+              style={{ cursor: 'pointer' }}
+            >
+              {buttonTexts[rotClickCount]}
+            </div>
           </div>
         </div>
       </main>

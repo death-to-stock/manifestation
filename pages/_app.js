@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import { Work_Sans } from 'next/font/google'
+import { AudioProvider } from '../context/AudioContext';
 
 const work_sans = Work_Sans({
   subsets: ['latin'],
@@ -8,9 +9,11 @@ const work_sans = Work_Sans({
 
 function MyApp({ Component, pageProps }) {
   return (
-    <main className={`${work_sans.variable} font-sans`}>
-      <Component {...pageProps} />
-    </main>
+    <AudioProvider>
+      <main className={`${work_sans.variable} font-sans`}>
+        <Component {...pageProps} />
+      </main>
+    </AudioProvider>
   );
 }
 

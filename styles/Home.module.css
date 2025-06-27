@@ -99,7 +99,9 @@
   padding: 1rem;
   text-align: center;
   font-size: 0.8rem;
-  position: static;
+  position: fixed;
+  bottom: 0;
+  left: 0;
 }
 
 .footer a {
