@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import { useAudio } from '../context/AudioContext';
 
@@ -41,9 +42,13 @@ export default function Home() {
 
       <main className={styles.main}>
         <div className={styles.header}>
-          <p>(<b>DTS</b>)</p>
+          <Image src="/DTSlogo.svg" alt="DTS Logo" width={51} height={16} />
           <p>X</p>
-          <p>TINA TARIGHIAN</p>
+          <p>
+            <a href="https://www.tina.zone" target="_blank" rel="noopener noreferrer">
+              TINA TARIGHIAN
+            </a>
+          </p>
         </div>
 
         <div className={styles.content}>
