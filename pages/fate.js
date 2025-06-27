@@ -60,6 +60,19 @@ const imageFiles = [
     'DTS_AURA_Fanette_Guilloud_Photos_ID12957.jpg',
   ];
 
+function drawRoundedRect(ctx, x, y, width, height, radius) {
+  if (width < 2 * radius) radius = width / 2;
+  if (height < 2 * radius) radius = height / 2;
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.arcTo(x + width, y, x + width, y + height, radius);
+  ctx.arcTo(x + width, y + height, x, y + height, radius);
+  ctx.arcTo(x, y + height, x, y, radius);
+  ctx.arcTo(x, y, x + width, y, radius);
+  ctx.closePath();
+  ctx.fill();
+}
+
 export default function Fate() {
   const router = useRouter();
   const { selected } = router.query;
@@ -126,14 +139,50 @@ export default function Fate() {
                 };
                 img.src = imageUrl;
             });
+
+            const logo = await new Promise((resolve, reject) => {
+              const img = new window.Image();
+              img.crossOrigin = "anonymous";
+              img.onload = () => {
+                  console.log('🖼️ Logo loaded successfully');
+                  resolve(img);
+              };
+              img.onerror = (err) => {
+                  console.error('🖼️ Logo failed to load:', err);
+                  reject(err);
+              };
+              img.src = '/DTSlogo.svg';
+          });
     
             const canvas = document.createElement('canvas');
             canvas.width = image.width;
             canvas.height = image.height;
             const ctx = canvas.getContext('2d');
-            ctx.drawImage(image, 0, 0);
-            console.log('🎨 Image drawn to canvas');
+            
             setProgress(50);
+            
+            const fontSize = canvas.width * 0.03;
+            const padding = fontSize * 0.5;
+            ctx.font = `${fontSize}px sans-serif`;
+
+            const floatingTexts = selectedItems.map((item) => {
+              const text = formatDisplayName(item)
+              const metrics = ctx.measureText(text);
+              const textWidth = metrics.width;
+              const textHeight = fontSize;
+              const boxWidth = textWidth + padding * 2;
+              const boxHeight = textHeight + padding * 2;
+              return {
+                text: text,
+                x: Math.random() * (canvas.width - boxWidth),
+                y: Math.random() * (canvas.height - boxHeight),
+                vx: (Math.random() - 0.5) * 4,
+                vy: (Math.random() - 0.5) * 4,
+                width: boxWidth,
+                height: boxHeight,
+                fontSize: textHeight,
+              };
+            });
     
             const videoStream = canvas.captureStream(30);
             const [videoTrack] = videoStream.getVideoTracks();
@@ -164,6 +213,7 @@ export default function Fate() {
             const recorder = new MediaRecorder(combinedStream, { mimeType });
             console.log(`📼 MediaRecorder initialized with ${mimeType}`);
             const chunks = [];
+            let animationFrameId;
     
             recorder.ondataavailable = (event) => {
               if (event.data.size > 0) {
@@ -174,6 +224,7 @@ export default function Fate() {
     
             recorder.onstop = () => {
               console.log('🛑 Recording stopped');
+              cancelAnimationFrame(animationFrameId);
               setProgress(95);
               const videoBlob = new Blob(chunks, { type: mimeType });
               console.log(`💾 Video blob created: ${videoBlob.size} bytes, type: ${mimeType}`);
@@ -184,8 +235,44 @@ export default function Fate() {
               setProgress(100);
               console.log('✅ UI updated to ready state');
             };
+
+            const animate = () => {
+              ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+              
+              const logoWidth = canvas.width * 0.15;
+              const logoHeight = (logo.height / logo.width) * logoWidth;
+              const logoMargin = 20;
+              ctx.drawImage(logo, canvas.width - logoWidth - logoMargin, logoMargin, logoWidth, logoHeight);
+
+              floatingTexts.forEach((text) => {
+                text.x += text.vx;
+                text.y += text.vy;
+    
+                if (text.x <= 0 || text.x + text.width >= canvas.width) {
+                  text.vx *= -1;
+                }
+                if (text.y <= 0 || text.y + text.height >= canvas.height) {
+                  text.vy *= -1;
+                }
+
+                text.x = Math.max(0, Math.min(text.x, canvas.width - text.width));
+                text.y = Math.max(0, Math.min(text.y, canvas.height - text.height));
+
+                ctx.fillStyle = 'white';
+                drawRoundedRect(ctx, text.x, text.y, text.width, text.height, text.height / 2);
+                
+                ctx.fillStyle = 'black';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = `${text.fontSize}px sans-serif`;
+                ctx.fillText(text.text, text.x + text.width / 2, text.y + text.height / 2);
+              });
+    
+              animationFrameId = requestAnimationFrame(animate);
+            };
     
             recorder.start();
+            animate();
             console.log('🔴 Recording started');
             
             const recordingDuration = 15000;
