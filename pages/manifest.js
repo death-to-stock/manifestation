@@ -84,7 +84,7 @@ export default function Manifest({ manifestations }) {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          YOU'VE ENTERED THE SUPERMANIFESTATION PORTAL
+          YOU'VE ENTERED <br></br> THE <br></br> SUPERMANIFESTATION PORTAL
         </h1>
         <p className={styles.subtitle}>!!! SELECT WISELY !!!</p>
         <div style={{color: '#ff4500', fontSize: '2rem'}}>

@@ -7,11 +7,15 @@
     align-items: center;
     color: #fff;
     font-family: var(--font-sans);
-    background-image: url('/screens/menu.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
   }
+
+.backgroundImageWrapper {
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  z-index: -1;
+}
   
   .main {
     padding: 5rem 1rem;
@@ -21,7 +25,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    max-width: 500px;
+    max-width: 400px;
     text-align: center;
     position: relative;
   }
@@ -45,6 +49,10 @@
   
   .logo {
     margin-top: 2rem;
+  }
+
+  .logo img {
+    object-fit: contain;
   }
 
   .footer {
