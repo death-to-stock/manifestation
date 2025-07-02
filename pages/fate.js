@@ -321,16 +321,8 @@ export default function Fate() {
 
   if (!isReady) {
     return (
-      <>
-        <div className={fateStyles.backgroundImageWrapper}>
-          <Image
-            src="/screens/menu.jpg"
-            alt="background"
-            layout="fill"
-            objectFit="cover"
-          />
-        </div>
         <div className={fateStyles.container}>
+            <div className={fateStyles.backgroundImageWrapper} />
             <Head>
             <title>Creating Fate - DTS x TINA</title>
             <link rel="icon" href="/favicon.ico" />
@@ -348,7 +340,6 @@ export default function Fate() {
             <p className={fateStyles.progressText}>{progress}%</p>
             </main>
         </div>
-      </>
     );
   }
 
@@ -375,7 +366,7 @@ export default function Fate() {
         </div>
         
         <div className={ritualStyles.content}>
-            <h1 className={ritualStyles.title}>YOUR CUSTOM MANIFESTATION <br></br> FREQUENCY <br></br> IS READY TO USE</h1>
+            <h1 className={ritualStyles.title}>YOUR CUSTOM MANIFESTATION FREQUENCY IS READY TO USE</h1>
             <p className={ritualStyles.subtitle}>Ritual: 1x listen per day</p>
             {downloaded ? (
               <button className={ritualStyles.downloadButton} onClick={() => router.push('/share')}>
