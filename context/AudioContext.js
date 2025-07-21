@@ -16,7 +16,7 @@ export function AudioProvider({ children }) {
 
   return (
     <AudioContext.Provider value={{ playAudio }}>
-      <audio ref={audioRef} src="/background.mp3" loop />
+      <audio ref={audioRef} src="/background_optimized.mp3" loop preload="none" />
       {children}
     </AudioContext.Provider>
   );

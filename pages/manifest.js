@@ -65,7 +65,7 @@ export default function Manifest({ manifestations }) {
     <div className={styles.container}>
       <div className={styles.backgroundImageWrapper}>
         <Image
-          src="/screens/menu.jpg"
+          src="/screens/menu.webp"
           alt="background"
           layout="fill"
           objectFit="cover"

@@ -9,7 +9,7 @@
     font-family: var(--font-sans);
     overflow: hidden;
     position: relative;
-    background-image: url('/screens/download.jpg');
+    background-image: url('/screens/download.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

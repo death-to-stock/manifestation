@@ -332,7 +332,7 @@ export default function Fate() {
             <h1 className={fateStyles.title}>YOUR FATE IS BEING CREATED!</h1>
             <p className={fateStyles.subtitle}>PLEASE HOLD...</p>
             <div className={fateStyles.logo}>
-                <Image src="/DTSloading.gif" alt="Loading..." width={150} height={150} style={{ objectFit: 'contain' }} />
+                <Image src="/DTSloading.webp" alt="Loading..." width={150} height={150} style={{ objectFit: 'contain' }} />
             </div>
             <div className={fateStyles.progressContainer}>
                 <div className={fateStyles.progressBar} style={{ width: `${progress}%` }}></div>

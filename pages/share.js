@@ -32,7 +32,7 @@ export default function Share() {
       </Head>
 
       <Image
-        src="/screens/share.jpg"
+        src="/screens/share.webp"
         alt="Background"
         layout="fill"
         objectFit="cover"

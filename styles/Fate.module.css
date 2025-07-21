@@ -18,7 +18,7 @@
     left: 0;
     overflow: hidden;
     z-index: -1;
-    background: url('/screens/menu.jpg') no-repeat center center;
+    background: url('/screens/menu.webp') no-repeat center center;
     background-size: cover;
 }
   
