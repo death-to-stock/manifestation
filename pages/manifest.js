@@ -1,35 +1,40 @@
-import Head from 'next/head';
-import Link from 'next/link';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import styles from '../styles/Manifest.module.css';
-import { formatDisplayName } from '../utils/format';
-import fs from 'fs';
-import path from 'path';
-import Image from 'next/image';
+import Head from "next/head";
+import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import styles from "../styles/Manifest.module.css";
+import { formatDisplayName } from "../utils/format";
+import fs from "fs";
+import path from "path";
+import Image from "next/image";
+import { saasco } from "../lib/saasco";
 
 function shuffle(array) {
-  let currentIndex = array.length,  randomIndex;
+  let currentIndex = array.length,
+    randomIndex;
 
   // While there remain elements to shuffle.
   while (currentIndex > 0) {
-
     // Pick a remaining element.
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
 
     // And swap it with the current element.
     [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex], array[currentIndex]];
+      array[randomIndex],
+      array[currentIndex],
+    ];
   }
 
   return array;
 }
 
 export async function getStaticProps() {
-  const audioDir = path.join(process.cwd(), 'public', 'audio');
+  const audioDir = path.join(process.cwd(), "public", "audio");
   const filenames = fs.readdirSync(audioDir);
-  const filteredFilenames = filenames.filter(file => file.endsWith('.m4a') || file.endsWith('.mp3'));
+  const filteredFilenames = filenames.filter(
+    (file) => file.endsWith(".m4a") || file.endsWith(".mp3")
+  );
 
   const shuffledFilenames = shuffle(filteredFilenames);
 
@@ -47,14 +52,27 @@ export default function Manifest({ manifestations }) {
   const toggleSelection = (item) => {
     if (selected.includes(item)) {
       setSelected(selected.filter((i) => i !== item));
+      saasco.track("Manifestation Deselected", {
+        manifestation: formatDisplayName(item),
+        totalSelected: selected.length - 1,
+      });
     } else {
       setSelected([...selected, item]);
+      saasco.track("Manifestation Selected", {
+        manifestation: formatDisplayName(item),
+        totalSelected: selected.length + 1,
+      });
     }
   };
 
   const handleClaimFate = () => {
+    saasco.track("Claim Fate Clicked", {
+      selectedManifestations: selected.map((item) => formatDisplayName(item)),
+      totalSelected: selected.length,
+      destination: "fate",
+    });
     router.push({
-      pathname: '/fate',
+      pathname: "/fate",
       query: { selected: selected },
     });
   };
@@ -77,9 +95,18 @@ export default function Manifest({ manifestations }) {
       </Head>
 
       <div className={styles.header}>
-          <Link href="/" className={styles.backButton}>
-              BACK
-          </Link>
+        <Link
+          href="/"
+          className={styles.backButton}
+          onClick={() =>
+            saasco.track("Back Button Clicked", {
+              source: "manifest",
+              destination: "homepage",
+            })
+          }
+        >
+          BACK
+        </Link>
       </div>
 
       <main className={styles.main}>
@@ -87,15 +114,15 @@ export default function Manifest({ manifestations }) {
           YOU'VE ENTERED <br></br> THE <br></br> SUPERMANIFESTATION PORTAL
         </h1>
         <p className={styles.subtitle}>!!! SELECT WISELY !!!</p>
-        <div style={{color: '#ff4500', fontSize: '2rem'}}>
-        ↓
-        </div>
+        <div style={{ color: "#ff4500", fontSize: "2rem" }}>↓</div>
 
         <div className={styles.options}>
           {manifestations.map((item) => (
             <button
               key={item}
-              className={`${styles.optionButton} ${selected.includes(item) ? styles.selected : ''}`}
+              className={`${styles.optionButton} ${
+                selected.includes(item) ? styles.selected : ""
+              }`}
               onClick={() => toggleSelection(item)}
             >
               {formatDisplayName(item)}
@@ -106,25 +133,32 @@ export default function Manifest({ manifestations }) {
 
       <div className={styles.stickyFooter}>
         <div className={styles.claimButtonContainer}>
-            <button 
-                className={styles.claimButton} 
-                disabled={!isClaimFateActive}
-                onClick={handleClaimFate}
-            >
-                CLAIM FATE
-            </button>
+          <button
+            className={styles.claimButton}
+            disabled={!isClaimFateActive}
+            onClick={handleClaimFate}
+          >
+            CLAIM FATE
+          </button>
         </div>
       </div>
 
       <footer className={styles.footer}>
-          <a
-            href="https://deathtostock.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            deathtostock.com
-          </a>
-        </footer>
+        <a
+          href="https://deathtostock.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() =>
+            saasco.track("External Link Clicked", {
+              source: "manifest",
+              destination: "deathtostock.com",
+              location: "footer",
+            })
+          }
+        >
+          deathtostock.com
+        </a>
+      </footer>
     </div>
   );
-} 
+}

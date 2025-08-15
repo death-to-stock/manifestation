@@ -1,7 +1,8 @@
-import Head from 'next/head';
-import Link from 'next/link';
-import Image from 'next/image';
-import styles from '../styles/Visuals.module.css';
+import Head from "next/head";
+import Link from "next/link";
+import Image from "next/image";
+import styles from "../styles/Visuals.module.css";
+import { saasco } from "../lib/saasco";
 
 export default function Visuals() {
   return (
@@ -11,37 +12,80 @@ export default function Visuals() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <a href="https://deathtostock.com" target="_blank" rel="noopener noreferrer" className={styles.logo}>
+      <a
+        href="https://deathtostock.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.logo}
+        onClick={() =>
+          saasco.track("External Link Clicked", {
+            source: "visuals",
+            destination: "deathtostock.com",
+            location: "logo",
+          })
+        }
+      >
         <Image src="/DTSlogo.svg" alt="DTS Logo" width={51} height={16} />
       </a>
 
       <div className={styles.header}>
-          <Link href="/" className={styles.backButton}>
-              BACK
-          </Link>
+        <Link
+          href="/"
+          className={styles.backButton}
+          onClick={() =>
+            saasco.track("Back Button Clicked", {
+              source: "visuals",
+              destination: "homepage",
+            })
+          }
+        >
+          BACK
+        </Link>
       </div>
 
       <main className={styles.main}>
         <h1 className={styles.title}>STAY LOST</h1>
-        <p className={styles.subtitle}>It's the only way to discover something new</p>
-        
-        <a href="https://deathtostock.s3.us-east-1.amazonaws.com/2025/ARE+YOU+STILL+LOST%3F+.zip" target="_blank" rel="noopener noreferrer" className={styles.downloadButton}>
+        <p className={styles.subtitle}>
+          It's the only way to discover something new
+        </p>
+
+        <a
+          href="https://deathtostock.s3.us-east-1.amazonaws.com/2025/ARE+YOU+STILL+LOST%3F+.zip"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={styles.downloadButton}
+          onClick={() =>
+            saasco.track("Download Free Visuals Clicked", {
+              source: "visuals",
+              downloadUrl:
+                "https://deathtostock.s3.us-east-1.amazonaws.com/2025/ARE+YOU+STILL+LOST%3F+.zip",
+              action: "download_zip",
+            })
+          }
+        >
           DOWNLOAD FREE VISUALS
         </a>
       </main>
 
       <footer className={styles.footer}>
-          <a
-            href="https://deathtostock.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            deathtostock.com
-          </a>
-        </footer>
-        <div className={styles.blurb}>
-          <p>🔍 Psst! Find them in your Files (downloads folder)</p>
-        </div>
+        <a
+          href="https://deathtostock.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() =>
+            saasco.track("External Link Clicked", {
+              source: "visuals",
+              destination: "deathtostock.com",
+              location: "footer",
+            })
+          }
+        >
+          deathtostock.com
+        </a>
+      </footer>
+      <div className={styles.blurb}>
+        <p>🔍 Psst! Find them in your Files (downloads folder)</p>
+      </div>
     </div>
   );
-} 
+}

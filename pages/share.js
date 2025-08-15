@@ -1,25 +1,46 @@
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
-import styles from '../styles/Share.module.css';
-import { useRouter } from 'next/router';
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+import styles from "../styles/Share.module.css";
+import { useRouter } from "next/router";
+import { saasco } from "../lib/saasco";
 
 export default function Share() {
   const router = useRouter();
 
   const handleShare = async () => {
+    saasco.track("Share Button Clicked", {
+      source: "share",
+      action: "recruit_friends",
+      shareMethod: navigator.share ? "native_share" : "alert_fallback",
+    });
+
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'DTS x TINA',
-          text: 'I found my frequency.',
+          title: "DTS x TINA",
+          text: "I found my frequency.",
           url: window.location.origin,
         });
+        saasco.track("Share Completed", {
+          source: "share",
+          shareMethod: "native_share",
+          success: true,
+        });
       } catch (error) {
-        console.error('Error sharing:', error);
+        console.error("Error sharing:", error);
+        saasco.track("Share Failed", {
+          source: "share",
+          shareMethod: "native_share",
+          error: error.message || "Unknown error",
+        });
       }
     } else {
-      alert('Web Share API is not supported in your browser.');
+      saasco.track("Share Not Supported", {
+        source: "share",
+        shareMethod: "alert_fallback",
+      });
+      alert("Web Share API is not supported in your browser.");
     }
   };
 
@@ -45,23 +66,37 @@ export default function Share() {
           <p className={styles.heading}>
             THE MORE ENERGY YOU SUMMON, THE STRONGER THE MANIFESTATION.
           </p>
-          <p className={styles.subheading}>
-            BRING OTHERS INTO THE FIELD.
-          </p>
+          <p className={styles.subheading}>BRING OTHERS INTO THE FIELD.</p>
 
           <div className={styles.buttons}>
-            <button onClick={handleShare} className={`${styles.button} ${styles.sacrificeButton}`}>
+            <button
+              onClick={handleShare}
+              className={`${styles.button} ${styles.sacrificeButton}`}
+            >
               RECRUIT FRIENDS
             </button>
-            <Link href="/" className={`${styles.button} ${styles.manifestButton}`}>
+            <Link
+              href="/"
+              className={`${styles.button} ${styles.manifestButton}`}
+              onClick={() =>
+                saasco.track("Manifest Again Clicked", {
+                  source: "share",
+                  destination: "homepage",
+                  action: "restart_journey",
+                })
+              }
+            >
               MANIFEST AGAIN
             </Link>
           </div>
         </div>
         <div className={styles.toast}>
-            <p>🔍 Psst! Find your frequency in your Files (downloads folder), and share to stories</p>
+          <p>
+            🔍 Psst! Find your frequency in your Files (downloads folder), and
+            share to stories
+          </p>
         </div>
       </main>
     </div>
   );
-} 
+}
